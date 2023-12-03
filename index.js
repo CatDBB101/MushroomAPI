@@ -94,7 +94,7 @@ app.post("/api/register", (req, res) => {
     body.append("key", key);
 
     axios
-        .post("https://mushroom-db.vercel.app/users/key", body.toString(), {
+        .post("https://mushroom-db.vercel.app/users/", body.toString(), {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
