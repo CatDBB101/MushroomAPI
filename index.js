@@ -6,9 +6,6 @@ const app = express();
 const axios = require("axios");
 const querystring = require("querystring");
 
-// !: Express request convert to json
-app.use(express.json());
-
 // !: BodyParser
 const bodyParser = require("body-parser");
 app.use(
