@@ -47,7 +47,7 @@ app.get("/api/test", (req, res) => {
         });
 });
 
-app.get("/api/login/", (req, res) => {
+app.post("/api/login/", (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
 
