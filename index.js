@@ -67,10 +67,10 @@ app.post("/api/login/", (req, res) => {
                 res.send(["ok", key]);
             } else if (data[0] && !data[1]) {
                 console.log("[Action | GET] - Password incorrect");
-                res.send("Password incorrect");
+                res.send(["Password incorrect"]);
             } else {
                 console.log("[Action | GET] - Username not found");
-                res.send("Username not fonud");
+                res.send(["Username not fonud"]);
             }
         })
         .catch((error) => {
