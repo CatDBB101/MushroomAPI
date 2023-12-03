@@ -9,6 +9,14 @@ const querystring = require("querystring");
 // !: Express request convert to json
 app.use(express.json());
 
+// !: BodyParser
+const bodyParser = require("body-parser");
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+);
+
 // !: Enable CORS
 const cors = require("cors");
 app.use(cors());
