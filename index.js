@@ -124,7 +124,7 @@ app.post("/api/register", (req, res) => {
                     .then((response) => {
                         let data = response.data;
                         console.log(data);
-                        res.send(data);
+                        res.send(data.key);
                     })
                     .catch((error) => {
                         res.send("Error");
