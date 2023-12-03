@@ -69,7 +69,7 @@ app.get("/api/login/", (req, res) => {
                 res.send("Password incorrect");
             } else {
                 console.log("[Action | GET] - Username not found");
-                res.send("Username not fonud");
+                res.send(["Username not fonud", req.body]);
             }
         })
         .catch((error) => {
