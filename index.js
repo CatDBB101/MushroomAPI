@@ -79,3 +79,5 @@ app.get("/api/login/", (req, res) => {
 });
 
 app.listen(process.env.port || 3000); // Server lisening to localhost and port 3000
+
+module.exports = app;
