@@ -105,10 +105,10 @@ app.post("/api/register", (req, res) => {
             let data = response.data;
             console.log(data);
             if (data) {
-                var body1 = new URLSearchParams();
-                body1.append("username", username);
-                body1.append("password", password);
-                body1.append("key", key);
+                var body2 = new URLSearchParams();
+                body2.append("username", username);
+                body2.append("password", password);
+                body2.append("key", key);
 
                 axios // ?: Create new user
                     .post(
