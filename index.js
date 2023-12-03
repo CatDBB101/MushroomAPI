@@ -18,6 +18,7 @@ app.use(
 // !: Enable CORS
 const cors = require("cors");
 app.use(cors());
+app.use(res.set("SameSite: None"));
 
 // !: CookieParser
 const cookieParser = require("cookie-parser");
@@ -69,13 +70,13 @@ app.post("/api/login/", (req, res) => {
             if (data[0] && data[1]) {
                 console.log("[Action | GET] - Sent key to user");
                 res.cookie("MushroomLoginKey", key);
-                res.send("ok");
+                res.send(["ok", key]);
             } else if (data[0] && !data[1]) {
                 console.log("[Action | GET] - Password incorrect");
                 res.send("Password incorrect");
             } else {
                 console.log("[Action | GET] - Username not found");
-                res.send(["Username not fonud", req.body]);
+                res.send("Username not fonud");
             }
         })
         .catch((error) => {
