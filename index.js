@@ -70,8 +70,7 @@ app.post("/api/login/", (req, res) => {
                 console.log("[Action | GET] - Sent key to user");
                 res.setHeader(
                     "Set-Cookie",
-                    "where=server;domain=localhost.com;Secure;expires=" +
-                        getUtcTimeInSecondsFromNow(60)
+                    "where=server;domain=localhost.com;Secure;"
                 );
                 res.cookie("MushroomLoginKey", key);
                 res.send(["ok", key]);
