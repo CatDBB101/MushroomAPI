@@ -88,21 +88,51 @@ app.post("/api/register", (req, res) => {
     var key = GenerateKey();
     console.log(key);
 
-    var body = new URLSearchParams();
-    body.append("username", username);
-    body.append("password", password);
-    body.append("key", key);
+    var body1 = new URLSearchParams();
+    body1.append("username", username);
 
-    axios
-        .post("https://mushroom-db.vercel.app/users/", body.toString(), {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-        })
+    axios // ?: Check for username used or not.
+        .post(
+            "https://mushroom-db.vercel.app/users/check/username",
+            body1.toString(),
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            }
+        )
         .then((response) => {
             let data = response.data;
             console.log(data);
-            res.send("ok");
+            if (data) {
+                var body1 = new URLSearchParams();
+                body1.append("username", username);
+                body1.append("password", password);
+                body1.append("key", key);
+
+                axios // ?: Create new user
+                    .post(
+                        "https://mushroom-db.vercel.app/users",
+                        body2.toString(),
+                        {
+                            headers: {
+                                "Content-Type":
+                                    "application/x-www-form-urlencoded",
+                            },
+                        }
+                    )
+                    .then((response) => {
+                        let data = response.data;
+                        console.log(data);
+                        res.send(data);
+                    })
+                    .catch((error) => {
+                        res.send("Error");
+                        console.error("Error:", error);
+                    });
+            } else {
+                res.send(false);
+            }
         })
         .catch((error) => {
             res.send("Error");
