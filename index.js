@@ -19,6 +19,9 @@ app.use(
 const cors = require("cors");
 app.use(cors());
 
+// !: Tools
+const GenerateKey = require("./Tools/GenerateKey");
+
 // !: API path way section
 app.get("/api/", (req, res) => {
     res.send("Server is running...");
@@ -72,6 +75,34 @@ app.post("/api/login/", (req, res) => {
                 console.log("[Action | GET] - Username not found");
                 res.send(["Username not fonud"]);
             }
+        })
+        .catch((error) => {
+            res.send("Error");
+            console.error("Error:", error);
+        });
+});
+
+app.post("/api/register", (req, res) => {
+    var username = req.body.username;
+    var password = req.body.password;
+    var key = GenerateKey();
+    console.log(key);
+
+    var body = new URLSearchParams();
+    body.append("username", username);
+    body.append("password", password);
+    body.append("key", key);
+
+    axios
+        .post("https://mushroom-db.vercel.app/users/key", body.toString(), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        })
+        .then((response) => {
+            let data = response.data;
+            console.log(data);
+            res.send("ok");
         })
         .catch((error) => {
             res.send("Error");
