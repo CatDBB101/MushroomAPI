@@ -54,7 +54,7 @@ app.post("/api/login/", (req, res) => {
     var body = new URLSearchParams();
     body.append("username", username);
     body.append("password", password);
-    
+
     axios
         .post("https://mushroom-db.vercel.app/users/key", body.toString(), {
             headers: {
@@ -68,6 +68,11 @@ app.post("/api/login/", (req, res) => {
 
             if (data[0] && data[1]) {
                 console.log("[Action | GET] - Sent key to user");
+                res.setHeader(
+                    "Set-Cookie",
+                    "where=server;domain=localhost.com;Secure;expires=" +
+                        getUtcTimeInSecondsFromNow(60)
+                );
                 res.cookie("MushroomLoginKey", key);
                 res.send(["ok", key]);
             } else if (data[0] && !data[1]) {
