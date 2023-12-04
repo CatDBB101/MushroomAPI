@@ -191,6 +191,7 @@ app.post("/api/get/records", (req, res) => {
         .then((response) => {
             let data = response.data;
             console.log(data);
+            console.log(data[0].records);
             res.send(data[0].records);
         })
         .catch((error) => {
