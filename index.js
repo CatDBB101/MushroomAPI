@@ -194,7 +194,7 @@ app.post("/api/get/records", (req, res) => {
             res.send(data[0].records);
         })
         .catch((error) => {
-            res.send(error);
+            res.send("Error");
             console.error("Error:", error);
         });
 });
