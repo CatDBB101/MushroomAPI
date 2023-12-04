@@ -140,6 +140,65 @@ app.post("/api/register", (req, res) => {
         });
 });
 
+app.post("/api/update/temp", (req, res) => {
+    var key = req.body.key;
+    var time = req.body.time;
+    var temp = req.body.temp;
+    var humi = req.body.humi;
+    var elec = req.body.elec;
+    var van = req.body.van;
+
+    var body = new URLSearchParams();
+    body.append("key", key);
+    body.append("time", time);
+    body.append("temp", temp);
+    body.append("humi", humi);
+    body.append("elec", elec);
+    body.append("van", van);
+
+    axios
+        .post("https://mushroom-db.vercel.app/records", body.toString(), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        })
+        .then((response) => {
+            let data = response.data;
+            console.log(data);
+
+            res.send(data);
+        })
+        .catch((error) => {
+            res.send("Error");
+            console.error("Error:", error);
+        });
+});
+
+app.post("/api/get/temp", (req, res) => {
+    var key = req.body.key;
+
+    console.log(key);
+
+    var body = new URLSearchParams();
+    body.append("key", key);
+
+    axios
+        .post("https://mushroom-db.vercel.app/records/get", body.toString(), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        })
+        .then((response) => {
+            let data = response.data;
+            console.log(data);
+            res.send(data);
+        })
+        .catch((error) => {
+            res.send("Error");
+            console.error("Error:", error);
+        });
+});
+
 app.listen(process.env.port || 3000); // Server lisening to localhost and port 3000
 
 module.exports = app;
