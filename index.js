@@ -140,7 +140,7 @@ app.post("/api/register", (req, res) => {
         });
 });
 
-app.post("/api/update/temp", (req, res) => {
+app.post("/api/update/records", (req, res) => {
     var key = req.body.key;
     var time = req.body.time;
     var temp = req.body.temp;
