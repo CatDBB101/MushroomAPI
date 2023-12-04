@@ -174,7 +174,7 @@ app.post("/api/update/temp", (req, res) => {
         });
 });
 
-app.post("/api/get/temp", (req, res) => {
+app.post("/api/get/records", (req, res) => {
     var key = req.body.key;
 
     console.log(key);
@@ -191,7 +191,7 @@ app.post("/api/get/temp", (req, res) => {
         .then((response) => {
             let data = response.data;
             console.log(data);
-            res.send(data);
+            res.send(data.records);
         })
         .catch((error) => {
             res.send("Error");
