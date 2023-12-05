@@ -146,7 +146,7 @@ app.post("/api/update/records", (req, res) => {
     var temp = req.body.temp;
     var humi = req.body.humi;
     var elec = req.body.elec;
-    var van = req.body.van;
+    var fan = req.body.fan;
 
     var body = new URLSearchParams();
     body.append("key", key);
@@ -154,7 +154,7 @@ app.post("/api/update/records", (req, res) => {
     body.append("temp", temp);
     body.append("humi", humi);
     body.append("elec", elec);
-    body.append("van", van);
+    body.append("fan", fan);
 
     console.log(req.body);
 
