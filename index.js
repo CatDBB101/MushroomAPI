@@ -156,6 +156,8 @@ app.post("/api/update/records", (req, res) => {
     body.append("elec", elec);
     body.append("van", van);
 
+    console.log(req.body);
+
     axios
         .post("https://mushroom-db.vercel.app/records", body.toString(), {
             headers: {
