@@ -200,6 +200,30 @@ app.post("/api/get/records", (req, res) => {
         });
 });
 
+app.post("/api/get/name", (req, res) => {
+    var key = req.body.key;
+
+    console.log(key);
+
+    var body = new URLSearchParams();
+    body.append("key", key);
+
+    axios
+        .post("https://mushroom-db.vercel.app/get/name", body.toString(), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        })
+        .then((response) => {
+            var data = response.data;
+            res.send(data);
+        })
+        .catch((error) => {
+            res.send("Error");
+            console.error("Error:", error);
+        });
+});
+
 app.listen(process.env.port || 3000); // Server lisening to localhost and port 3000
 
 module.exports = app;
