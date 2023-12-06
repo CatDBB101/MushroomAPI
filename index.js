@@ -276,7 +276,7 @@ app.post("/api/mode", (req, res) => {
 
 app.post("/api/change/mode", (req, res) => {
     var key = req.body.key;
-    var change_to = req.body.change_to;
+    var change_to = req.body.changeto;
 
     var body = new URLSearchParams();
     body.append("key", key);
@@ -285,6 +285,60 @@ app.post("/api/change/mode", (req, res) => {
     axios
         .post(
             "https://mushroom-db.vercel.app/records/change/mode",
+            body.toString(),
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            }
+        )
+        .then((response) => {
+            var data = response.data;
+            res.send(data);
+        })
+        .catch((error) => {
+            res.send("Error");
+            console.error("Error:", error);
+        });
+});
+
+app.post("/api/status", (req, res) => {
+    var key = req.body.key;
+
+    var body = new URLSearchParams();
+    body.append("key", key);
+
+    axios
+        .post(
+            "https://mushroom-db.vercel.app/records/get/status",
+            body.toString(),
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            }
+        )
+        .then((response) => {
+            var data = response.data;
+            res.send(data);
+        })
+        .catch((error) => {
+            res.send("Error");
+            console.error("Error:", error);
+        });
+});
+
+app.post("/api/change/status", (req, res) => {
+    var key = req.body.key;
+    var change_to = req.body.changeto;
+
+    var body = new URLSearchParams();
+    body.append("key", key);
+    body.append("change_to", change_to);
+
+    axios
+        .post(
+            "https://mushroom-db.vercel.app/records/change/status",
             body.toString(),
             {
                 headers: {
