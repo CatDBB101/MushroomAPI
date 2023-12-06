@@ -276,7 +276,7 @@ app.post("/api/mode", (req, res) => {
 
 app.post("/api/change/mode", (req, res) => {
     var key = req.body.key;
-    var change_to = req.body.changeto;
+    var change_to = req.body.change_to;
 
     var body = new URLSearchParams();
     body.append("key", key);
@@ -330,7 +330,7 @@ app.post("/api/status", (req, res) => {
 
 app.post("/api/change/status", (req, res) => {
     var key = req.body.key;
-    var change_to = req.body.changeto;
+    var change_to = req.body.change_to;
 
     var body = new URLSearchParams();
     body.append("key", key);
