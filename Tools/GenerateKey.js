@@ -1,14 +1,14 @@
 function generateString() {
+    let result = "";
     const characters =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    length = 5;
-    let result = " ";
     const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
+    let counter = 0;
+    while (counter < 5) {
         result += characters.charAt(
             Math.floor(Math.random() * charactersLength)
         );
+        counter += 1;
     }
     return result;
 }
