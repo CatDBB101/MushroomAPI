@@ -356,6 +356,60 @@ app.post("/api/change/status", (req, res) => {
         });
 });
 
+app.post("/api/auto_temp", (req, res) => {
+    var key = req.body.key;
+
+    var body = new URLSearchParams();
+    body.append("key", key);
+
+    axios
+        .post(
+            "https://mushroom-db.vercel.app/records/get/auto_temp",
+            body.toString(),
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            }
+        )
+        .then((response) => {
+            var data = response.data;
+            res.send(data);
+        })
+        .catch((error) => {
+            res.send("Error");
+            console.error("Error:", error);
+        });
+});
+
+app.post("/api/change/auto_temp", (req, res) => {
+    var key = req.body.key;
+    var change_to = req.body.change_to;
+
+    var body = new URLSearchParams();
+    body.append("key", key);
+    body.append("change_to", change_to);
+
+    axios
+        .post(
+            "https://mushroom-db.vercel.app/records/change/auto_temp",
+            body.toString(),
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            }
+        )
+        .then((response) => {
+            var data = response.data;
+            res.send(data);
+        })
+        .catch((error) => {
+            res.send("Error");
+            console.error("Error:", error);
+        });
+});
+
 app.listen(process.env.port || 3000); // Server lisening to localhost and port 3000
 
 module.exports = app;
