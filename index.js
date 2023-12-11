@@ -410,6 +410,28 @@ app.post("/api/change/auto_temp", (req, res) => {
         });
 });
 
+app.post("/time", async (req, res, next) => {
+    axios
+        .get(
+            "https://timezone.abstractapi.com/v1/current_time/?api_key=207b34aa0a0142babdcbbd4972a032d9&location=Bangkok, Thailand",
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            }
+        )
+        .then((response) => {
+            var data = response.data;
+            console.log(data.datetime.split("-"));
+            var data_split = data.datetime.split("-");
+            res.send([data_split[0], data_split[1], data_split[2].substring(0, 2)])
+        })
+        .catch((error) => {
+            res.send("Error");
+            console.error("Error:", error);
+        });
+});
+
 app.listen(process.env.port || 3000); // Server lisening to localhost and port 3000
 
 module.exports = app;
