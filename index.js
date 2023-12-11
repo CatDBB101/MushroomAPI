@@ -424,7 +424,7 @@ app.post("/time", async (req, res, next) => {
             var data = response.data;
             console.log(data.datetime.split("-"));
             var data_split = data.datetime.split("-");
-            res.send([data_split[0], data_split[1], data_split[2].substring(0, 2)])
+            res.send(data_split[0] + " " + data_split[1], + " " + data_split[2].substring(0, 2));
         })
         .catch((error) => {
             res.send("Error");
