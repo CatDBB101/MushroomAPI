@@ -429,8 +429,15 @@ app.post("/time", async (req, res, next) => {
                 " " +
                 data_split[1] +
                 " " +
-                data_split[2].substring(0, 2);
-            res.send(send   );
+                data_split[2].substring(0, 2) +
+                " " +
+                data_split[2].substring(3, 5) +
+                " " +
+                data_split[2].substring(6, 8) +
+                " " +
+                data_split[2].substring(9, 13)
+                ;
+            res.send(send);
         })
         .catch((error) => {
             res.send("Error");
