@@ -413,7 +413,7 @@ app.post("/api/change/auto_temp", (req, res) => {
 app.post("/time", async (req, res, next) => {
     axios
         .get(
-            "https://timezone.abstractapi.com/v1/current_time/?api_key=207b34aa0a0142babdcbbd4972a032d9&location=Bangkok, Thailand",
+            "https://timezone.abstractapi.com/v1/current_time/?api_key=e81adf154e774832a6802916c6d269fb&location=Bangkok, Thailand",
             {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
