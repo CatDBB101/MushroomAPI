@@ -28,6 +28,7 @@ app.use(cors());
 const generateKey = require("./Tools/generateKey");
 const checkPassword = require("./Tools/checkPassword");
 const checkUsername = require("./Tools/checkUsername");
+const getRecord = require("./Tools/getRecord");
 
 // !: Schemas & Models
 const UsersSchema = new mongoose.Schema({
@@ -448,20 +449,20 @@ app.post("/api/settings/auto_temp", async (req, res) => {
     res.send(auto_feedback);
 });
 
-// TODO: Get record
+// TODO: Get records
 app.post("/api/records/get", async (req, res) => {
     console.log("[POST | /api/record/get] - get record", req.body);
 
     var body = req.body;
     var key = body.key;
-    var min = body.key;
+    var min = body.min;
     var max = body.max;
 
     /* 
         get record rule: [{1}]
         1. check key
     */
-    auto_feedback = [0];
+    get_feedback = [0];
 
     // ? Check key
     var findKey = await UsersModel.find({
@@ -470,17 +471,23 @@ app.post("/api/records/get", async (req, res) => {
 
     if (findKey.length == 0) {
         // ! Not found key
-        auto_feedback[0] = 0;
-        res.send([auto_feedback]);
+        get_feedback[0] = 0;
+        res.send([get_feedback]);
         return;
     }
 
     // ? Change auto temperature & Send feedback
-    auto_feedback[0] = 1;
+    get_feedback[0] = 1;
 
-    
+    var allRecord = await RecordsModel.find({ key: key });
 
-    res.send([auto_feedback]);
+    var responseRecords = getRecord(allRecord[0].records, min, max);
+
+    res.send([get_feedback, responseRecords]);
 });
+
+// TODO: 
+
+
 app.listen(process.env.port || 3000);
 module.exports = app;
