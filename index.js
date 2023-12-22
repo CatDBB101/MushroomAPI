@@ -14,7 +14,7 @@ app.use(function (req, res, next) {
 app.use(express.json());
 
 app.get("/api/", (req, res) => {
-    res.json("Server is running.");
+    res.send("Server is running.");
     console.log(req.body);
 });
 
