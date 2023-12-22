@@ -656,7 +656,7 @@ app.post("/api/line/get", async (req, res) => {
         key: key,
     });
 
-    res.send([line_feedback, findLineRecord]);
+    res.send([line_feedback, findLineRecord[0]]);
 });
 
 app.listen(process.env.port || 3000);
