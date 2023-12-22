@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/api/", (req, res) => {
-    res.send("Server is running.");
+    res.json("Server is running.");
     console.log(req.body);
 });
 
