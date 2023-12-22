@@ -1,9 +1,6 @@
 const express = require("express");
 const app = express();
 
-const cors = require("cors");
-app.use(cors());
-
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(
@@ -12,9 +9,12 @@ app.use(
     })
 );
 
+const cors = require("cors");
+app.use(cors());
+
 app.post("/api/", (req, res) => {
-    res.send("Server is running.");
     console.log(req.body);
+    res.send("Server is running.");
 });
 
 app.listen(process.env.port || 3000);
