@@ -29,6 +29,7 @@ const generateKey = require("./Tools/generateKey");
 const checkPassword = require("./Tools/checkPassword");
 const checkUsername = require("./Tools/checkUsername");
 const getRecord = require("./Tools/getRecord");
+const getFilter = require("./Tools/getFilter");
 
 // !: Schemas & Models
 const UsersSchema = new mongoose.Schema({
@@ -561,6 +562,7 @@ app.post("/api/records/get", async (req, res) => {
     var key = body.key;
     var min = body.min;
     var max = body.max;
+    var filter = body.filter;
 
     /* 
         get record rule: [{1}]
@@ -586,6 +588,8 @@ app.post("/api/records/get", async (req, res) => {
     var allRecord = await RecordsModel.find({ key: key });
 
     var responseRecords = getRecord(allRecord[0].records, min, max);
+
+    var responseRecords = getFilter(responseRecords, filter);
 
     res.send([get_feedback, responseRecords]);
 });

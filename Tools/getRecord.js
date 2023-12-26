@@ -24,7 +24,7 @@ function getRecord(allRecord, minTime, maxTime) {
 
         if (minDate <= recordDate && recordDate <= maxDate) {
             console.log("record :",recordDate);
-            record_return.push(recordDate);
+            record_return.push(record);
         }
     });
 
