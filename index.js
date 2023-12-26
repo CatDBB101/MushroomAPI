@@ -89,30 +89,36 @@ app.post("/api/register", async (req, res) => {
             ? true
             : false;
 
-    if (password_accepted) {
+    if (!password_accepted) {
         // ! Password unaccepted
         raw_username_feedback[1] == undefined;
         res.send({
             username: raw_username_feedback,
             password: raw_password_feedback,
+            key: undefined,
         });
         return;
     }
 
     // ? Check username already used
-    var checkUsernameAlreadyUse =
-        (await UsersModel.find({
-            username: username,
-        }).length) == 0
-            ? false
-            : true;
+    var findUsername = await UsersModel.find({ username: username });
+    console.log(findUsername.length);
 
-    if (!checkUsernameAlreadyUse) {
+    var checkUsernameAlreadyUse =
+        findUsername.length != 0
+            ? true // TODO: Already use
+            : false; // ! Never use
+    console.log(await UsersModel.find({ username: username }));
+
+    console.log(checkUsernameAlreadyUse);
+
+    if (checkUsernameAlreadyUse) {
         // ! Username already use
         raw_username_feedback[1] = 0;
         res.send({
             username: raw_username_feedback,
             password: raw_password_feedback,
+            key: undefined,
         });
         return;
     }
@@ -157,6 +163,7 @@ app.post("/api/register", async (req, res) => {
     res.send({
         username: raw_username_feedback,
         password: raw_password_feedback,
+        key: key,
     });
 });
 
