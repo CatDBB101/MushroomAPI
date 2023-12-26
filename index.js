@@ -89,7 +89,7 @@ app.post("/api/register", async (req, res) => {
             ? true
             : false;
 
-    if (!password_accepted) {
+    if (password_accepted) {
         // ! Password unaccepted
         raw_username_feedback[1] == undefined;
         res.send({
