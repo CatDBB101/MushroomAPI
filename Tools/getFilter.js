@@ -5,14 +5,13 @@ function getFilter(allRecord, filterName) {
         var record_return = [];
         allRecord.forEach((record) => {
             recordIndex = {
-                date: 0,
                 temp: 1,
                 humi: 2,
                 elec: 3,
                 fan: 4,
             };
 
-            record_return.push(record[recordIndex[filterName]]);
+            record_return.push([record[0] ,record[recordIndex[filterName]]]);
         });
 
         return record_return;
