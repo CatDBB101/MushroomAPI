@@ -594,6 +594,45 @@ app.post("/api/records/get", async (req, res) => {
     res.send([get_feedback, responseRecords]);
 });
 
+// TODO: Get last records
+app.post("/api/records/get/last", async (req, res) => {
+    console.log("[POST | /api/record/get] - get record", req.body);
+
+    var body = req.body;
+    var key = body.key;
+    var filter = body.filter;
+
+    /* 
+        get last record rule: [{1}]
+        1. check key
+    */
+    get_feedback = [0];
+
+    // ? Check key
+    var findKey = await UsersModel.find({
+        key: key,
+    });
+
+    if (findKey.length == 0) {
+        // ! Not found key
+        get_feedback[0] = 0;
+        res.send([get_feedback]);
+        return;
+    }
+
+    // ? Change auto temperature & Send feedback
+    get_feedback[0] = 1;
+
+    var allRecord = await RecordsModel.find({ key: key });
+    var allRecord = allRecord[0].records;
+
+    var lastRecord = allRecord[allRecord.length - 1];
+
+    var responseRecords = getFilter([lastRecord], filter);
+
+    res.send([get_feedback, responseRecords[0]]);
+});
+
 // TODO: Set line got it
 app.post("/api/line/set", async (req, res) => {
     console.log("[POST | /api/line/set] - set line", req.body);
