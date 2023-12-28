@@ -554,6 +554,40 @@ app.post("/api/settings/auto_temp", async (req, res) => {
     res.send(auto_feedback);
 });
 
+app.post("/api/settings/get", async (req, res) => {
+    console.log("[POST | /api/settings/get] - get settings", req.body);
+
+    var body = req.body;
+    var key = body.key;
+    var setting = body.setting;
+
+    /* 
+        change temp in auto rule: [{1}]
+        1. check key
+    */
+    setting_feedback = [0];
+
+    // ? Check key
+    var findKey = await UsersModel.find({
+        key: key,
+    });
+
+    if (findKey.length == 0) {
+        // ! Not found key
+        setting_feedback[0] = 0;
+        res.send([setting_feedback]);
+        return;
+    }
+
+    // ? Change auto temperature & Send feedback
+    setting_feedback[0] = 1;
+
+    var allRecord = await RecordsModel.find({ key: key });
+
+    console.log(allRecord);
+    res.send([setting_feedback, allRecord[0][setting]]);
+});
+
 // TODO: Get records
 app.post("/api/records/get", async (req, res) => {
     console.log("[POST | /api/record/get] - get record", req.body);
@@ -596,7 +630,7 @@ app.post("/api/records/get", async (req, res) => {
 
 // TODO: Get last records
 app.post("/api/records/get/last", async (req, res) => {
-    console.log("[POST | /api/record/get] - get record", req.body);
+    console.log("[POST | /api/record/get/last] - get last record", req.body);
 
     var body = req.body;
     var key = body.key;
