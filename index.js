@@ -570,5 +570,24 @@ app.post("/api/records/get/last", async (req, res) => {
     res.send([get_feedback, responseRecords[0]]);
 });
 
+// TODO: Verify key
+app.post("/api/verify", async (req, res) => {
+    var body = req.body;
+    var key = body.key;
+
+    // ? Get key from username
+    var verify = await UsersModel.find({
+        key: key,
+    });
+
+    if (verify.length <= 0) {
+        // ! Not found
+        res.send([0]);
+    } else {
+        // TODO: Found
+        res.send([1]);
+    }
+});
+
 app.listen(process.env.port || 4000);
 module.exports = app;
