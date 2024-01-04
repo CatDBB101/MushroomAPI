@@ -48,20 +48,6 @@ const RecordsSchema = new mongoose.Schema({
 });
 const RecordsModel = mongoose.model("records", RecordsSchema);
 
-const LineSchema = new mongoose.Schema({
-    key: String,
-    time: String,
-    temp: String,
-    humi: String,
-    elec: String,
-    fan: String,
-    mode: String,
-    status: String,
-    auto_temp: String,
-    got_it: String,
-});
-const LineModel = mongoose.model("lines", LineSchema);
-
 // TODO: Check API's status
 app.post("/api/", async (req, res) => {
     console.log("[POST | /api/] - Check API's status.", req.body);
@@ -144,21 +130,6 @@ app.post("/api/register", async (req, res) => {
         auto_temp: "25",
     };
     var status_record = await RecordsModel.create(saving_record_data);
-
-    // ? Create standard line in database
-    var saving_line_data = {
-        key: key,
-        time: "undefined",
-        temp: "undefined",
-        humi: "undefined",
-        elec: "undefined",
-        fan: "undefined",
-        mode: "undefined",
-        status: "undefined",
-        auto_temp: "undefined",
-        got_it: "undefined",
-    };
-    var status_line = await LineModel.create(saving_line_data);
 
     raw_username_feedback[1] = 1;
     res.send({
@@ -270,10 +241,6 @@ app.post("/api/delete", async (req, res) => {
     }).then(async () => {});
 
     UsersModel.deleteOne({
-        key: key,
-    }).then(async () => {});
-
-    LineModel.deleteOne({
         key: key,
     }).then(async () => {});
 
@@ -402,38 +369,6 @@ app.post("/api/settings/mode", async (req, res) => {
         }
     );
 
-    // ? Get temp, humi, elec, fan, status, auto_temp
-    var setting = await RecordsModel.find({
-        key: key,
-    });
-    var last_record = setting[0].records[setting[0].records.length - 1];
-    var time = last_record[0];
-    var temp = last_record[1];
-    var humi = last_record[2];
-    var elec = last_record[3];
-    var fan = last_record[4];
-
-    var status = setting[0].status;
-    var auto_temp = setting[0].auto_temp;
-
-    // ? Change line record
-    var line_status = await LineModel.updateOne(
-        { key: key },
-        {
-            $set: {
-                time: time,
-                temp: temp,
-                humi: humi,
-                elec: elec,
-                fan: fan,
-                mode: change_to,
-                status: status,
-                auto_temp: auto_temp,
-                got_it: "false",
-            },
-        }
-    );
-
     res.send(mode_feedback);
 });
 
@@ -471,38 +406,6 @@ app.post("/api/settings/status", async (req, res) => {
         {
             $set: {
                 status: change_to,
-            },
-        }
-    );
-
-    // ? Get temp, humi, elec, fan, status, auto_temp
-    var setting = await RecordsModel.find({
-        key: key,
-    });
-    var last_record = setting[0].records[setting[0].records.length - 1];
-    var time = last_record[0];
-    var temp = last_record[1];
-    var humi = last_record[2];
-    var elec = last_record[3];
-    var fan = last_record[4];
-
-    var mode = setting[0].mode;
-    var auto_temp = setting[0].auto_temp;
-
-    // ? Change line record
-    var line_status = await LineModel.updateOne(
-        { key: key },
-        {
-            $set: {
-                time: time,
-                temp: temp,
-                humi: humi,
-                elec: elec,
-                fan: fan,
-                mode: mode,
-                status: change_to,
-                auto_temp: auto_temp,
-                got_it: "false",
             },
         }
     );
@@ -667,81 +570,5 @@ app.post("/api/records/get/last", async (req, res) => {
     res.send([get_feedback, responseRecords[0]]);
 });
 
-// TODO: Set line got it
-app.post("/api/line/set", async (req, res) => {
-    console.log("[POST | /api/line/set] - set line", req.body);
-
-    var body = req.body;
-    var key = body.key;
-    var change_to = body.change_to;
-
-    /* 
-        set line rule: [{1}]
-        1. check key
-    */
-    line_feedback = [0];
-
-    // ? Check key
-    var findKey = await UsersModel.find({
-        key: key,
-    });
-
-    if (findKey.length == 0) {
-        // ! Not found key
-        line_feedback[0] = 0;
-        res.send(line_feedback);
-        return;
-    }
-
-    // ? Change auto temperature & Send feedback
-    line_feedback[0] = 1;
-
-    var line_status = await LineModel.updateOne(
-        { key: key },
-        {
-            $set: {
-                got_it: change_to,
-            },
-        }
-    );
-
-    res.send(line_feedback);
-});
-
-// TODO: Get line record
-app.post("/api/line/get", async (req, res) => {
-    console.log("[POST | /api/line/get] - get line record", req.body);
-
-    var body = req.body;
-    var key = body.key;
-
-    /* 
-        get line record rule: [{1}]
-        1. check key
-    */
-    line_feedback = [0];
-
-    // ? Check key
-    var findKey = await UsersModel.find({
-        key: key,
-    });
-
-    if (findKey.length == 0) {
-        // ! Not found key
-        line_feedback[0] = 0;
-        res.send([line_feedback]);
-        return;
-    }
-
-    // ? Change auto temperature & Send feedback
-    line_feedback[0] = 1;
-
-    var findLineRecord = await LineModel.find({
-        key: key,
-    });
-
-    res.send([line_feedback, findLineRecord[0]]);
-});
-
-app.listen(process.env.port || 3000);
+app.listen(process.env.port || 4000);
 module.exports = app;
