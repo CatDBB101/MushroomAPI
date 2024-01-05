@@ -30,6 +30,7 @@ const checkPassword = require("./Tools/checkPassword");
 const checkUsername = require("./Tools/checkUsername");
 const getRecord = require("./Tools/getRecord");
 const getFilter = require("./Tools/getFilter");
+const lineNotification = require("./Tools/lineNotification");
 
 // !: Schemas & Models
 const UsersSchema = new mongoose.Schema({
@@ -47,6 +48,12 @@ const RecordsSchema = new mongoose.Schema({
     auto_temp: String,
 });
 const RecordsModel = mongoose.model("records", RecordsSchema);
+
+const LineSchema = new mongoose.Schema({
+    key: String,
+    lineId: String,
+});
+const LineModel = mongoose.model("lines", LineSchema);
 
 // TODO: Check API's status
 app.post("/api/", async (req, res) => {
@@ -338,6 +345,8 @@ app.post("/api/settings/mode", async (req, res) => {
     var body = req.body;
     var key = body.key;
     var change_to = body.change_to;
+    var notification =
+        body.notification == undefined ? false : Boolean(body.notification);
 
     /* 
         change mode rule: [{1}]
@@ -369,6 +378,38 @@ app.post("/api/settings/mode", async (req, res) => {
         }
     );
 
+    if (notification) {
+        var lineId = await UsersModel.find({
+            key: key,
+        });
+        var date = new Date();
+        var type = "mode";
+
+        var allRecord = await RecordsModel.find({ key: key });
+        var allRecord = allRecord[0].records;
+        var lastRecord = allRecord[allRecord.length - 1];
+
+        var temp = lastRecord[1];
+        var humi = lastRecord[2];
+        var elec = lastRecord[3];
+
+        var status = lastRecord.status;
+        var mode = change_to;
+        var auto_temp = lastRecord.auto_temp;
+
+        lineNotification(lineId, {
+            key: key,
+            date: date,
+            type: type,
+            temp: temp,
+            humi: humi,
+            elec: elec,
+            status: status,
+            mode: mode,
+            auto_temp: auto_temp,
+        });
+    }
+
     res.send(mode_feedback);
 });
 
@@ -379,6 +420,8 @@ app.post("/api/settings/status", async (req, res) => {
     var body = req.body;
     var key = body.key;
     var change_to = body.change_to;
+    var notification =
+        body.notification == undefined ? false : Boolean(body.notification);
 
     /* 
         change status rule: [{1}]
@@ -410,6 +453,38 @@ app.post("/api/settings/status", async (req, res) => {
         }
     );
 
+    if (notification) {
+        var lineId = await UsersModel.find({
+            key: key,
+        });
+        var date = new Date();
+        var type = "status";
+
+        var allRecord = await RecordsModel.find({ key: key });
+        var allRecord = allRecord[0].records;
+        var lastRecord = allRecord[allRecord.length - 1];
+
+        var temp = lastRecord[1];
+        var humi = lastRecord[2];
+        var elec = lastRecord[3];
+
+        var mode = lastRecord.mode;
+        var status = change_to;
+        var auto_temp = lastRecord.auto_temp;
+
+        lineNotification(lineId, {
+            key: key,
+            date: date,
+            type: type,
+            temp: temp,
+            humi: humi,
+            elec: elec,
+            status: status,
+            mode: mode,
+            auto_temp: auto_temp,
+        });
+    }
+
     res.send(status_feedback);
 });
 
@@ -423,6 +498,8 @@ app.post("/api/settings/auto_temp", async (req, res) => {
     var body = req.body;
     var key = body.key;
     var change_to = body.change_to;
+    var notification =
+        body.notification == undefined ? false : Boolean(body.notification);
 
     /* 
         change temp in auto rule: [{1}]
@@ -453,6 +530,38 @@ app.post("/api/settings/auto_temp", async (req, res) => {
             },
         }
     );
+
+    if (notification) {
+        var lineId = await UsersModel.find({
+            key: key,
+        });
+        var date = new Date();
+        var type = "auto_temp";
+
+        var allRecord = await RecordsModel.find({ key: key });
+        var allRecord = allRecord[0].records;
+        var lastRecord = allRecord[allRecord.length - 1];
+
+        var temp = lastRecord[1];
+        var humi = lastRecord[2];
+        var elec = lastRecord[3];
+
+        var mode = lastRecord.mode;
+        var status = lastRecord.status;
+        var auto_temp = change_to;
+
+        lineNotification(lineId, {
+            key: key,
+            date: date,
+            type: type,
+            temp: temp,
+            humi: humi,
+            elec: elec,
+            status: status,
+            mode: mode,
+            auto_temp: auto_temp,
+        });
+    }
 
     res.send(auto_feedback);
 });
@@ -587,6 +696,22 @@ app.post("/api/verify", async (req, res) => {
         // TODO: Found
         res.send([1]);
     }
+});
+
+// TODO: Line nontification
+app.post("/api/notification", async (req, res) => {
+    var body = req.body;
+    body.date = new Date();
+
+    console.log(body);
+
+    var lineId = await UsersModel.find({
+        key: body.key,
+    });
+
+    lineNotification(lineId, body);
+
+    res.send("OK");
 });
 
 app.listen(process.env.port || 4000);
