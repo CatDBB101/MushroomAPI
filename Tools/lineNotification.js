@@ -1,4 +1,4 @@
-const axios = require('axios/dist/node/axios.cjs');
+const axios = require('axios');
 
 function lineNotification(lineId, body) {
     console.log(body);
