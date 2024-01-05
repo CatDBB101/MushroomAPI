@@ -1,5 +1,5 @@
 function lineNotification(lineId, body) {
-    const axios = require("axios");
+    const axiosNot = require("axios");
 
     console.log(body);
 
@@ -57,7 +57,7 @@ function lineNotification(lineId, body) {
         ],
     });
 
-    axios
+    axiosNot
         .post("https://api.line.me/v2/bot/message/push", dataString, {
             headers: {
                 "Content-Type": "application/json",
