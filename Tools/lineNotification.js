@@ -1,6 +1,6 @@
-const axios = require('axios');
-
 function lineNotification(lineId, body) {
+    const axios = require("axios");
+
     console.log(body);
 
     var date = new Date(body.date);
