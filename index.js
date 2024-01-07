@@ -24,13 +24,86 @@ app.use(
 const cors = require("cors");
 app.use(cors());
 
+// ! Axios
+const axios = require("axios");
+
 // !: Tools
 const generateKey = require("./Tools/generateKey");
 const checkPassword = require("./Tools/checkPassword");
 const checkUsername = require("./Tools/checkUsername");
 const getRecord = require("./Tools/getRecord");
 const getFilter = require("./Tools/getFilter");
-const lineNotification = require("./Tools/lineNotification");
+
+function lineNotification(lineId, body) {
+    console.log(body);
+
+    var date = new Date(body.date);
+    var temp = body.temp;
+    var humi = body.humi;
+    var elec = body.elec;
+    var auto_temp = body.auto_temp;
+
+    var mode = body.mode == "auto" ? "อัตโนมัติ" : "อิสระ";
+    var status = body.status == "on" ? "เปิด" : "ปิด";
+
+    var type = body.type;
+
+    var notificationText = "";
+    if (type == "mode") {
+        notificationText = `มีการเปลี่ยนโหมดเป็น${mode} โดย ณ ขณะนี้เวลา ${date} 
+มีสถานะปัจจุบัน ดังนี้
+อุณหภูมิ : ${temp} °C
+ความชื้น : ${humi} %
+การใช้ไฟฟ้า : ${elec} W
+โหมด : ${mode}
+ตัวทำความเย็น : ${status}
+อุณหภูมิตั้งต้น : ${auto_temp} °C
+        `;
+    } else if (type == "status") {
+        notificationText = `มีการ${status}ตัวทำความเย็น โดย ณ ขณะนี้เวลา ${date} 
+มีสถานะปัจจุบัน ดังนี้
+อุณหภูมิ : ${temp} °C
+ความชื้น : ${humi} %
+การใช้ไฟฟ้า : ${elec} W
+โหมด : ${mode}
+ตัวทำความเย็น : ${status}
+อุณหภูมิตั้งต้น : ${auto_temp} °C
+        `;
+    } else if (type == "auto_temp") {
+        notificationText = `มีการเปลี่ยนค่าอุณหภูมิตั้งตันเป็น ${auto_temp} °C โดย ณ ขณะนี้เวลา ${date} 
+มีสถานะปัจจุบัน ดังนี้
+อุณหภูมิ : ${temp} °C
+ความชื้น : ${humi} %
+การใช้ไฟฟ้า : ${elec} W
+โหมด : ${mode}
+ตัวทำความเย็น : ${status}
+อุณหภูมิตั้งต้น : ${auto_temp} °C
+        `;
+    }
+
+    const dataString = JSON.stringify({
+        to: lineId,
+        messages: [
+            {
+                type: "text",
+                text: notificationText,
+            },
+        ],
+    });
+
+    axios
+        .post("https://api.line.me/v2/bot/message/push", dataString, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization:
+                    "Bearer " +
+                    "OskrQ6ZqFQHP+XN1ozS6Ka0UHChaYqJqa5/6ZxesLtFzxcCbd1bZHyNy/rTRe9xWrnkMLQEwYz3d0l9clcmEBVX31LSS2bSA4F0Cod7xVUUR0enNW4iUheonk9v17LveEZ47LM6eXw8STZK4SeOeEgdB04t89/1O/w1cDnyilFU=",
+            },
+        })
+        .then((response) => {
+            // console.log(response);
+        });
+}
 
 // !: Schemas & Models
 const UsersSchema = new mongoose.Schema({
@@ -698,20 +771,45 @@ app.post("/api/verify", async (req, res) => {
     }
 });
 
-// TODO: Line nontification
+// TODO: Line notification
 app.post("/api/notification", async (req, res) => {
     var body = req.body;
     body.date = new Date();
 
     console.log(body);
 
-    var lineId = await UsersModel.find({
+    var lineId = await LineModel.find({
         key: body.key,
     });
 
-    lineNotification(lineId, body);
+    lineNotification(lineId[0].lineId, body);
 
     res.send("OK");
+});
+
+// TODO: Add key to line notification in database
+app.post("/api/notification/key", async (req, res) => {
+    var body = req.body;
+    var key = body.key;
+    var lineId = body.lineId;
+
+    // ? Get key from username
+    var verify = await UsersModel.find({
+        key: key,
+    });
+
+    if (verify.length <= 0) {
+        // ! Not found
+        res.send([0]);
+    } else {
+        var addKeyLine = await LineModel.findOneAndUpdate(
+            { lineId: lineId },
+            { $set: { key: key } }
+        );
+
+        // TODO: Found
+        res.send([1]);
+    }
 });
 
 app.listen(process.env.port || 4000);
