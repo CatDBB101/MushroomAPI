@@ -809,7 +809,7 @@ app.post("/api/notification/key", async (req, res) => {
         res.send([0]);
     } else {
         var addKeyLine = await LineModel.findOneAndUpdate(
-            { lineId: id },
+            { lineId: lineId },
             { $set: { key: key } }
         );
 
