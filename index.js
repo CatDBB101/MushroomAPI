@@ -782,9 +782,15 @@ app.post("/api/notification", async (req, res) => {
         key: body.key,
     });
 
-    lineNotification(lineId[0].lineId, body);
+    if (lineId.length <= 0) {
+        res.send("No lineId");
+    } else {
+        lineId.forEach((id) => {
+            lineNotification(id.lineId, body);
+        });
 
-    res.send("OK");
+        res.send("OK");
+    }
 });
 
 // TODO: Add key to line notification in database
@@ -802,10 +808,12 @@ app.post("/api/notification/key", async (req, res) => {
         // ! Not found
         res.send([0]);
     } else {
-        var addKeyLine = await LineModel.findOneAndUpdate(
-            { lineId: lineId },
-            { $set: { key: key } }
-        );
+        array.forEach(async (id) => {
+            var addKeyLine = await LineModel.findOneAndUpdate(
+                { lineId: id },
+                { $set: { key: key } }
+            );
+        });
 
         // TODO: Found
         res.send([1]);
