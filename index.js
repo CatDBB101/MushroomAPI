@@ -808,7 +808,7 @@ app.post("/api/notification/key", async (req, res) => {
         // ! Not found
         res.send([0]);
     } else {
-        array.forEach(async (id) => {
+        verify.forEach(async (id) => {
             var addKeyLine = await LineModel.findOneAndUpdate(
                 { lineId: id },
                 { $set: { key: key } }
