@@ -808,12 +808,10 @@ app.post("/api/notification/key", async (req, res) => {
         // ! Not found
         res.send([0]);
     } else {
-        verify.forEach(async (id) => {
-            var addKeyLine = await LineModel.findOneAndUpdate(
-                { lineId: id },
-                { $set: { key: key } }
-            );
-        });
+        var addKeyLine = await LineModel.findOneAndUpdate(
+            { lineId: id },
+            { $set: { key: key } }
+        );
 
         // TODO: Found
         res.send([1]);
