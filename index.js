@@ -671,7 +671,7 @@ app.post("/api/settings/get", async (req, res) => {
     var allRecord = await RecordsModel.find({ key: key });
 
     console.log(allRecord);
-    if (body.machine == false) {
+    if (machine == false) {
         res.send([setting_feedback, allRecord[0][setting]]);
     } else {
         res.send(allRecord[0][setting]);
