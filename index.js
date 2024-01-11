@@ -648,6 +648,7 @@ app.post("/api/settings/get", async (req, res) => {
     var body = req.body;
     var key = body.key;
     var setting = body.setting;
+    var machine = body.machine == undefined ? false : true;
 
     /* 
         change temp in auto rule: [{1}]
@@ -673,7 +674,11 @@ app.post("/api/settings/get", async (req, res) => {
     var allRecord = await RecordsModel.find({ key: key });
 
     console.log(allRecord);
-    res.send([setting_feedback, allRecord[0][setting]]);
+    if (machine == false) {
+        res.send([setting_feedback, allRecord[0][setting]]);
+    } else {
+        res.send(allRecord[0][setting]);
+    }
 });
 
 // TODO: Get records
