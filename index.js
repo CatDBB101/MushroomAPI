@@ -452,7 +452,7 @@ app.post("/api/settings/mode", async (req, res) => {
     );
 
     if (notification) {
-        var lineId = await UsersModel.find({
+        var lineId = await LineModel.find({
             key: key,
         });
         var date = new Date();
@@ -470,7 +470,7 @@ app.post("/api/settings/mode", async (req, res) => {
         var mode = change_to;
         var auto_temp = lastRecord.auto_temp;
 
-        lineNotification(lineId, {
+        lineNotification(lineId[0].lineId, {
             key: key,
             date: date,
             type: type,
@@ -527,7 +527,7 @@ app.post("/api/settings/status", async (req, res) => {
     );
 
     if (notification) {
-        var lineId = await UsersModel.find({
+        var lineId = await LineModel.find({
             key: key,
         });
         var date = new Date();
@@ -545,7 +545,7 @@ app.post("/api/settings/status", async (req, res) => {
         var status = change_to;
         var auto_temp = lastRecord.auto_temp;
 
-        lineNotification(lineId, {
+        lineNotification(lineId[0].lineId, {
             key: key,
             date: date,
             type: type,
@@ -605,7 +605,7 @@ app.post("/api/settings/auto_temp", async (req, res) => {
     );
 
     if (notification) {
-        var lineId = await UsersModel.find({
+        var lineId = await LineModel.find({
             key: key,
         });
         var date = new Date();
@@ -623,7 +623,7 @@ app.post("/api/settings/auto_temp", async (req, res) => {
         var status = lastRecord.status;
         var auto_temp = change_to;
 
-        lineNotification(lineId, {
+        lineNotification(lineId[0].lineId, {
             key: key,
             date: date,
             type: type,
