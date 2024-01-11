@@ -496,6 +496,8 @@ app.post("/api/settings/status", async (req, res) => {
     var notification =
         body.notification == undefined ? false : Boolean(body.notification);
 
+    console.log(body.notification, typeof body.notification);
+
     /* 
         change status rule: [{1}]
         1. check key
@@ -527,7 +529,7 @@ app.post("/api/settings/status", async (req, res) => {
     );
 
     if (notification) {
-        var lineId = await UsersModel.find({
+        var lineId = await LineModel.find({
             key: key,
         });
         var date = new Date();
@@ -545,7 +547,8 @@ app.post("/api/settings/status", async (req, res) => {
         var status = change_to;
         var auto_temp = lastRecord.auto_temp;
 
-        lineNotification(lineId, {
+        console.log(lineId[0].lineId);
+        lineNotification(lineId[0].lineId, {
             key: key,
             date: date,
             type: type,
